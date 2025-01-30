@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <h2>Search</h2>
+    <form method="get" action="{% url 'search' %}">
+        {{ form.as_p }}
+        <button type="submit">Search</button>
+    </form>
+
+    {% if query %}
+        <h3>Results for "{{ query }}"</h3>
+        {% if results %}
+            <ul>
+                {% for item in results %}
+                <li>
+                    <h4><a href="{% url 'detail' item.id %}">{{ item.title }}</a></h4>
+                    <p>{{ item.description }}</p>
+                    {% if item.image %}
+                    <img src="{{ item.image.url }}" alt="{{ item.title }}" width="200">
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No results found.</p>
+        {% endif %}
+    {% endif %}
+
+    {% if results %}
+    <ul>
+        {% for item in results %}
+            <li>
+                <h4>{{ item.title }}</h4>
+                <p>{{ item.description }}</p>
+                {% if item.image %}
+                    <img src="{{ item.image.url }}" alt="{{ item.title }}" width="200">
+                {% endif %}
+                {% if item.audio %}
+                    <audio controls>
+                        <source src="{{ item.audio.url }}" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                {% endif %}
+                {% if item.video %}
+                    <video controls width="300">
+                        <source src="{{ item.video.url }}" type="video/mp4">
+                        Your browser does not support the video element.
+                    </video>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+
+    <!-- Pagination -->
+    <div class="pagination">
+        <span class="step-links">
+            {% if results.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ results.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ results.number }} of {{ results.paginator.num_pages }}.
+            </span>
+
+            {% if results.has_next %}
+                <a href="?page={{ results.next_page_number }}">next</a>
+                <a href="?page={{ results.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+    {% else %}
+    <p>No results found.</p>
+    {% endif %}
+{% endblock %}

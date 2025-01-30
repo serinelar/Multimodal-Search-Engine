@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ item.title }}</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <header>
+        <h1>{{ item.title }}</h1>
+    </header>
+    <main>
+        <p>{{ item.description }}</p>
+        {% if item.text_content %}
+            <div>
+                <h3>Text Content</h3>
+                <p>{{ item.text_content }}</p>
+            </div>
+        {% endif %}
+        {% if item.image %}
+            <div>
+                <h3>Image</h3>
+                <img src="{{ item.image.url }}" alt="{{ item.title }}" width="300">
+            </div>
+        {% endif %}
+        {% if item.audio %}
+            <div>
+                <h3>Audio</h3>
+                <audio controls>
+                    <source src="{{ item.audio.url }}" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+        {% endif %}
+        {% if item.video %}
+            <div>
+                <h3>Video</h3>
+                <video controls width="400">
+                    <source src="{{ item.video.url }}" type="video/mp4">
+                    Your browser does not support the video element.
+                </video>
+            </div>
+        {% endif %}
+        <a href="{% url 'search' %}">Back to Search</a>
+    </main>
+</body>
+</html>
